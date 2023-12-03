@@ -1,3 +1,8 @@
+# Folders in this project
+/data/
+/galler/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
