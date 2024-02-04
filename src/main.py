@@ -1,10 +1,12 @@
 import os
+import webbrowser
 
 from openai import OpenAI
 import requests
 from io import BytesIO
 from PIL import Image
 import utils
+import json
 
 # Generate story using ChatGPT
 def generate_story(prompt):
@@ -24,6 +26,7 @@ def generate_story(prompt):
     )
     story = chat_completion.choices[0].message.content
     return story
+
 
 def generate_description(story):
     client = OpenAI(
@@ -49,6 +52,7 @@ def generate_description(story):
     description = chat_completion.choices[0].message.content
     return description
 
+
 # Create an image based on the story
 def generate_image(description, model="dall-e-3"):
     client = OpenAI(
@@ -72,10 +76,7 @@ def generate_image(description, model="dall-e-3"):
 
     # Open and display the image
     image = Image.open(image_data)
-    image.show()
-
     return image
-
 
 
 def save_to_gallery(image, image_number):
@@ -86,7 +87,7 @@ def save_to_gallery(image, image_number):
     parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 
     # Create the path for the "gallery" folder in the parent directory
-    gallery_path = os.path.join(parent_directory, "gallery")
+    gallery_path = os.path.join(parent_directory, "static")
 
     # Check if the "gallery" folder exists, and create it if not
     if not os.path.exists(gallery_path):
@@ -102,30 +103,57 @@ def save_to_gallery(image, image_number):
 
     # Save the image at the specified path
     image.save(image_path)
+    webbrowser.open(image_path)
+
+def setup_story(idea):
+    if not idea:
+        # We let AI generate a story based on our prompt if we have no idea for a beginning
+        prompt = utils.get_preprompt()
+        story = generate_story(prompt)
+    else:
+        # We take our idea as the beginning for our story if given
+        story = idea
+
+    print("Caption: ", story)
+
+    generated_description = generate_description(story)
+    # print(generated_description)
+    image = generate_image(generated_description)
+    save_to_gallery(image, 0)
+
+    return story
+
+
+def continue_story(story, image_number):
+    addition = input(f"You may continue the story ({image_number}): ")
+    continued_story = f"{story}{addition}"
+    print("Caption: ", continued_story)
+
+    generated_description = generate_description(continued_story)
+
+    image = generate_image(generated_description)
+    save_to_gallery(image, image_number)
+
+    return continued_story
+
+
+def dialogue_x_picture_story(story, x):
+    image_number = 1
+    while image_number < x:
+        story = continue_story(story, image_number)
+        image_number += 1
+
+    print("The story is concluded and saved in the gallery for others to see!")
 
 
 # Main function
 def main():
+    # story = 'As the sun began to set, a sense of unease settled over the sleepy town. From the shadows emerged a
+    # figure, moving silently through the deserted streets, its intentions unknown.'#generate_story(prompt)
+    # 'As the door creaked open, a waft of musty air filled the room, carrying with it the whispers of forgotten stories.'
+    story = setup_story(None)
+    dialogue_x_picture_story(story, 4)
 
-    prompt = utils.get_preprompt()
-    story = 'As the sun began to set, a sense of unease settled over the sleepy town. From the shadows emerged a figure, moving silently through the deserted streets, its intentions unknown.'#generate_story(prompt)
-    print(story)
-
-    generated_description = generate_description(story)
-    print(generated_description)
-
-    image = generate_image(generated_description)
-    save_to_gallery(image, 1)
-
-    addition = 'Then, from behind the shadowy figure, a vehicle slowly crept itself through the streets, moving towards the figure as if it was tracking him - makin the figure panick and run away.'
-    continued_story = f"{story}{addition}"
-    print(continued_story)
-
-    generated_description2 = generate_description(continued_story)
-    print(generated_description2)
-
-    image = generate_image(generated_description2)
-    save_to_gallery(image, 2)
 
 if __name__ == "__main__":
     main()
