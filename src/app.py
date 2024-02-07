@@ -14,11 +14,9 @@ def index():
         # Process user input as needed
         print('User Input received: '+user_input)
 
-    #imageList = os.listdir('/static/gallery')
-    #imagelist = ['pics/' + image for image in imageList]
+    images = [f for f in os.listdir(definitions.GALLERY_DIR) if f.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
 
-    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'image_0.png')
-    return render_template("index.html")
+    return render_template("index.html", images=images)
 
 if __name__ == '__main__':
     app.run(debug=True)

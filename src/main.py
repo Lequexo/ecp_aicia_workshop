@@ -82,12 +82,11 @@ def generate_image(description, model="dall-e-3"):
 def save_to_gallery(image, image_number):
     # Get the current directory of main.py
     current_directory = os.path.dirname(os.path.realpath(__file__))
-
     # Navigate to the parent directory (root_folder)
-    parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
+    #parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 
     # Create the path for the "gallery" folder in the parent directory
-    gallery_path = os.path.join(parent_directory, "static")
+    gallery_path = os.path.join("static", "gallery")
 
     # Check if the "gallery" folder exists, and create it if not
     if not os.path.exists(gallery_path):

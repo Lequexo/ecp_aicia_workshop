@@ -21,8 +21,9 @@
 
 
         <h2>Images:</h2>
+
         {% for image in images %}
-            <img src="{{ url_for('static', filename = image) }}">
+            <img src="{{ image }}" alt="{{ image }}">
         {% endfor %}
     </body>
     </html>
