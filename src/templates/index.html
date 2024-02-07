@@ -13,7 +13,7 @@
         <h1>Ever Changing Picture Gallery</h1>
 
 
-        <form method="post" action="{{ url_for('index') }}">
+        <form method="post" action="/addtostory">
             <label for="user_input">Start a story:</label>
             <input type="text" name="user_input" id="user_input">
             <input type="submit" value="Submit">
@@ -22,8 +22,12 @@
 
         <h2>Images:</h2>
 
-        {% for image in images %}
-            <img src="{{ image }}" alt="{{ image }}">
+        {% for entry in story %}
+            <ul>
+                <li><img src="{{ url_for('static',filename='gallery/'+entry['filename']) }}" alt="{{ image }}"></li>
+                <li>User Text: {{ entry['user_text'] }}</li>
+                <li>Prompt: {{ entry['prompt'] }}</li>
+            </ul>
         {% endfor %}
     </body>
     </html>

@@ -79,7 +79,7 @@ def generate_image(description, model="dall-e-3"):
     return image
 
 
-def save_to_gallery(image, image_number):
+def save_to_gallery(image: Image, image_number: int):
     # Get the current directory of main.py
     current_directory = os.path.dirname(os.path.realpath(__file__))
     # Navigate to the parent directory (root_folder)
@@ -103,6 +103,7 @@ def save_to_gallery(image, image_number):
     # Save the image at the specified path
     image.save(image_path)
     webbrowser.open(image_path)
+    return image_filename
 
 def setup_story(idea):
     if not idea:
