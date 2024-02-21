@@ -8,7 +8,8 @@ from PIL import Image
 import utils
 import json
 
-# Generate story using ChatGPT
+
+# Generate a short story snippet using ChatGPT tha acts as a basis for future story additions
 def generate_story(prompt):
     client = OpenAI(
         # defaults to os.environ.get("OPENAI_API_KEY")
@@ -28,6 +29,7 @@ def generate_story(prompt):
     return story
 
 
+# Describe a given story, so it can be used as input for DALL-E to illustrate the story
 def generate_description(story):
     client = OpenAI(
         # defaults to os.environ.get("OPENAI_API_KEY")
@@ -53,7 +55,7 @@ def generate_description(story):
     return description
 
 
-# Create an image based on the story
+# Create an image based on the description provided
 def generate_image(description, model="dall-e-3"):
     client = OpenAI(
         # defaults to os.environ.get("OPENAI_API_KEY")
@@ -64,7 +66,7 @@ def generate_image(description, model="dall-e-3"):
         model="dall-e-3",
         prompt=description,
         size="1024x1024",
-        quality="standard",
+        quality='standard',
         n=1,
     )
 
@@ -83,7 +85,7 @@ def save_to_gallery(image: Image, image_number: int):
     # Get the current directory of main.py
     current_directory = os.path.dirname(os.path.realpath(__file__))
     # Navigate to the parent directory (root_folder)
-    #parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
+    # parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 
     # Create the path for the "gallery" folder in the parent directory
     gallery_path = os.path.join("static", "gallery")
@@ -104,6 +106,7 @@ def save_to_gallery(image: Image, image_number: int):
     image.save(image_path)
     webbrowser.open(image_path)
     return image_filename
+
 
 def setup_story(idea):
     if not idea:
